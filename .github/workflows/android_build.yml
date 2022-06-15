@@ -30,6 +30,7 @@ jobs:
       - run: echo "$(ls)"
       - run: echo "$pwd"    
       - run: cat android/key.properties
+      - run: cat android
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -66,6 +67,9 @@ jobs:
       - name: Generate App APK
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
+          
+      - name: Check Android file build
+        run: echo "$(ls)"
 
 #       - uses: Tlaster/android-sign@v1.2.2
 #         name: Sign app APK
