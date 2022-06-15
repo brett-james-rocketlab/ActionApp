@@ -21,6 +21,13 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: gradle
+          
+      - name: Make secrets
+      - run: echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 -d > android/upload_keystore.jks
+      - run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 -d > android/key.properties    
+      - run: echo "$(ls)"
+      - run: echo "$pwd"    
+      - run: cat android/key.properties
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -58,17 +65,17 @@ jobs:
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
 
-      - uses: Tlaster/android-sign@v1.2.2
-        name: Sign app APK
-        with:
-          releaseDirectory: |
-            app/build/outputs/apk/release
-            app/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-          output: build/release/signed
-          alias: ${{ secrets.ANDROID_ALIAS }}
-          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+#       - uses: Tlaster/android-sign@v1.2.2
+#         name: Sign app APK
+#         with:
+#           releaseDirectory: |
+#             app/build/outputs/apk/release
+#             app/build/outputs/bundle/release
+#           signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+#           output: build/release/signed
+#           alias: ${{ secrets.ANDROID_ALIAS }}
+#           keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+#           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
 #         env:
 #           BUILD_TOOLS_VERSION: "30.0.2"
 
