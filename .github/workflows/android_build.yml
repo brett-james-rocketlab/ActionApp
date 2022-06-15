@@ -58,7 +58,7 @@ jobs:
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
 
-      - uses: Tlaster/android-sign@v1
+      - uses: Tlaster/android-sign@v1.2.2
         name: Sign app APK
         with:
           releaseDirectory: |
