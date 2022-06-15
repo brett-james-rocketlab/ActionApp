@@ -38,7 +38,7 @@ jobs:
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: '#automation'
-          file_path: 'message.txt'
+          file_path: 'android/key.properties'
           file_type: 'text'
           initial_comment: 'post by slack-upload-file'      
 
