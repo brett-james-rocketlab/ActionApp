@@ -22,25 +22,15 @@ jobs:
           distribution: 'temurin'
           cache: gradle
           
-      - name: Copy Key
-        run: echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 -d > android/upload_keystore.jks
-      - name: Make secrets
-        run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 -d > android/key.properties
+#       - name: Copy Key
+#         run: echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 -d > android/upload_keystore.jks
+#       - name: Make secrets
+#         run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 -d > android/key.properties
 
-      - run: echo "$(ls)"
-      - run: echo "$pwd"    
-      - run: cat android/key.properties
-      - run: echo "$(ls android)"
-      
-      - name: Upload to Slack
-        run: 'echo testing a file > message.txt'
-      - uses: MeilCli/slack-upload-file@v2
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: '#automation'
-          file_path: 'android/key.properties'
-          file_type: 'text'
-          initial_comment: 'post by slack-upload-file'      
+#       - run: echo "$(ls)"
+#       - run: echo "$pwd"    
+#       - run: cat android/key.properties
+#       - run: echo "$(ls android)"    
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -83,6 +73,16 @@ jobs:
 
       - name: Check Android file build
         run: echo "$(ls android/app/build/outputs/apk/release)"
+        
+      - name: Upload to Slack
+        run: 'echo testing a file > message.txt'
+      - uses: MeilCli/slack-upload-file@v2
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channels: '#automation'
+          file_path: 'android/key.properties'
+          file_type: 'text'
+          initial_comment: 'post by slack-upload-file'          
 
 #       - uses: Tlaster/android-sign@v1.2.2
 #         name: Sign app APK
@@ -99,16 +99,16 @@ jobs:
 #           BUILD_TOOLS_VERSION: "30.0.2"
 
 
-#       ## sign generated apk
-#       - name: Sign APK
-#         id: sign_app
-#         uses: r0adkll/sign-android-release@v1
-#         with:
-#           releaseDirectory: android/app/build/outputs/apk/release
-#           signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
-#           alias: ${{ secrets.ANDROID_ALIAS }}
-#           keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
-#           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+      ## sign generated apk
+      - name: Sign APK
+        id: sign_app
+        uses: r0adkll/sign-android-release@v1
+        with:
+          releaseDirectory: android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+          alias: ${{ secrets.ANDROID_ALIAS }}
+          keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+          keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
       # ## Distribute app to Firebase App Distribution for testing / use google play internal track if you have a google play account
       # - name: upload artifact to Firebase App Distribution
