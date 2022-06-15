@@ -69,7 +69,7 @@ jobs:
           cd android && ./gradlew assembleRelease --no-daemon
           
       - name: Check Android file build
-        run: echo "$(ls)"
+        run: echo "$(ls android)"
 
 #       - uses: Tlaster/android-sign@v1.2.2
 #         name: Sign app APK
