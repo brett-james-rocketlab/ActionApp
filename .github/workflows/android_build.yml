@@ -71,19 +71,6 @@ jobs:
       - name: Check Android folder build
         run: echo "$(ls android)"
 
-      - name: Check Android file build
-        run: echo "$(ls android/app/build/outputs/apk/release)"
-        
-      - name: Upload to Slack
-        run: 'echo testing a file > message.txt'
-      - uses: MeilCli/slack-upload-file@v2
-        with:
-          slack_token: ${{ secrets.SLACK_TOKEN }}
-          channels: '#automation'
-          file_path: 'android/app/build/outputs/apk/release/app-release.apk'
-          file_type: 'apk'
-          initial_comment: 'post by slack-upload-file'          
-
 #       - uses: Tlaster/android-sign@v1.2.2
 #         name: Sign app APK
 #         with:
@@ -109,6 +96,21 @@ jobs:
           alias: ${{ secrets.ANDROID_ALIAS }}
           keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+
+      - name: Check Android file build
+        run: echo "$(ls android/app/build/outputs/apk/release)"
+        
+      - name: Upload to Slack
+        run: 'echo testing a file > message.txt'
+      - uses: MeilCli/slack-upload-file@v2
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channels: '#automation'
+#           android/app/build/outputs/apk/release/app-release-signed.apk
+          file_path: 'android/app/build/outputs/apk/release/app-release.apk'
+          file_type: 'apk'
+          initial_comment: 'post by slack-upload-file'
 
       # ## Distribute app to Firebase App Distribution for testing / use google play internal track if you have a google play account
       # - name: upload artifact to Firebase App Distribution
