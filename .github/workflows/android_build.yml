@@ -24,7 +24,7 @@ jobs:
           
       - name: Make secrets
       - run: echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 -d > android/upload_keystore.jks
-      - run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 -d > android/key.properties    
+      - run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 -d > android/key.properties
       - run: echo "$(ls)"
       - run: echo "$pwd"    
       - run: cat android/key.properties
