@@ -31,6 +31,16 @@ jobs:
       - run: echo "$pwd"    
       - run: cat android/key.properties
       - run: echo "$(ls android)"
+      
+      - name: Upload to Slack
+      - run: 'echo testing a file > message.txt'
+      - uses: MeilCli/slack-upload-file@v2
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channels: '#automation'
+          file_path: 'message.txt'
+          file_type: 'text'
+          initial_comment: 'post by slack-upload-file'      
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
