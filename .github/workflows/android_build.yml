@@ -33,7 +33,7 @@ jobs:
       - run: echo "$(ls android)"
       
       - name: Upload to Slack
-      - run: 'echo testing a file > message.txt'
+        run: 'echo testing a file > message.txt'
       - uses: MeilCli/slack-upload-file@v2
         with:
           slack_token: ${{ secrets.SLACK_TOKEN }}
