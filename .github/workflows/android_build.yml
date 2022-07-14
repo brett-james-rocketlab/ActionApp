@@ -21,6 +21,16 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: gradle
+          
+#       - name: Copy Key
+#         run: echo "${{ secrets.ANDROID_SIGNING_KEY }}" | base64 -d > android/upload_keystore.jks
+#       - name: Make secrets
+#         run: echo "${{ secrets.KEY_PROPERTIES }}" | base64 -d > android/key.properties
+
+#       - run: echo "$(ls)"
+#       - run: echo "$pwd"    
+#       - run: cat android/key.properties
+#       - run: echo "$(ls android)"    
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
@@ -57,6 +67,24 @@ jobs:
       - name: Generate App APK
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
+          
+      - name: Check Android folder build
+        run: echo "$(ls android)"
+
+#       - uses: Tlaster/android-sign@v1.2.2
+#         name: Sign app APK
+#         with:
+#           releaseDirectory: |
+#             app/build/outputs/apk/release
+#             app/build/outputs/bundle/release
+#           signingKeyBase64: ${{ secrets.ANDROID_SIGNING_KEY }}
+#           output: build/release/signed
+#           alias: ${{ secrets.ANDROID_ALIAS }}
+#           keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
+#           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+#         env:
+#           BUILD_TOOLS_VERSION: "30.0.2"
+
 
       ## sign generated apk
       - name: Sign APK
@@ -68,6 +96,21 @@ jobs:
           alias: ${{ secrets.ANDROID_ALIAS }}
           keyStorePassword: ${{ secrets.ANDROID_KEY_STORE_PASSWORD }}
           keyPassword: ${{ secrets.ANDROID_KEY_PASSWORD }}
+
+
+      - name: Check Android file build
+        run: echo "$(ls android/app/build/outputs/apk/release)"
+        
+      - name: Upload to Slack
+        run: 'echo testing a file > message.txt'
+      - uses: MeilCli/slack-upload-file@v2
+        with:
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channels: '#automation'
+#           android/app/build/outputs/apk/release/app-release-signed.apk
+          file_path: 'android/app/build/outputs/apk/release/app-release.apk'
+          file_type: 'apk'
+          initial_comment: 'post by slack-upload-file'
 
       # ## Distribute app to Firebase App Distribution for testing / use google play internal track if you have a google play account
       # - name: upload artifact to Firebase App Distribution
