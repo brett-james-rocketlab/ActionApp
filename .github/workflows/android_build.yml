@@ -64,6 +64,12 @@ jobs:
       - name: Make Gradlew Executable
         run: cd android && chmod +x ./gradlew
 
+      - name: Make Custom Script Executable
+        run: chmod +x ./script.sh
+
+      - name: Run Increment Script
+        run: ./script.sh
+
       - name: Generate App APK
         run: |
           cd android && ./gradlew assembleRelease --no-daemon
