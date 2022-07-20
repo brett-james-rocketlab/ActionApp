@@ -1,8 +1,8 @@
 # need PlistBuddy installed
 appName=ActionApp
 appTestName="${appName}Tests"
-currentIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
-currentIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
+currentIOSPatchVersion=$(usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
+currentIOSVersion=$(usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
 currentAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
 currentVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
 
@@ -24,9 +24,9 @@ echo "current android version code: $currentVersionCode"
 increaseAndroidVersion() {
     newAndroidVersionCode=$(awk -F. '{ print ($1*10000000)+($2*100000+$3) }' <<< $1)
     # Set versionName and versionCode in app build.gradle for 3 digits
-    sed -i '' -E 's/versionName "([0-9]+.[0-9]+.[0-9]+)"/versionName "'$1'"/' android/app/build.gradle
+    sed -i -E 's/versionName "([0-9]+.[0-9]+.[0-9]+)"/versionName "'$1'"/' android/app/build.gradle
     # Works for code with 8 length
-    sed -i '' -E "s/versionCode [0-9]{0,8}$/versionCode $newAndroidVersionCode/" android/app/build.gradle
+    sed -i -E "s/versionCode [0-9]{0,8}$/versionCode $newAndroidVersionCode/" android/app/build.gradle
     echo "version name: $1"
     echo "version code: $newAndroidVersionCode"
 }
