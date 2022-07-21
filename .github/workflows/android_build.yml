@@ -8,7 +8,7 @@ on:
 jobs:
   android-build:
     name: Android Build
-    runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
+    runs-on: macos-latest # using ubuntu latest version / or you can use a specific version
     # runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
 
     steps:
