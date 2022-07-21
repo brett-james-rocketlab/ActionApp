@@ -1,20 +1,19 @@
 # need PlistBuddy installed
 appName=ActionApp
 appTestName="${appName}Tests"
-currentIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
-currentIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
+# currentIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
+# currentIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
 currentAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
 currentVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
 
-currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
-currentIOSMajorVersion=${currentIOSVersion%.*}
-currentIOSMinorVersion=${currentIOSVersion##*.}
+# currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
+# currentIOSMajorVersion=${currentIOSVersion%.*}
+# currentIOSMinorVersion=${currentIOSVersion##*.}
 
-echo "current ios major version: $currentIOSMajorVersion"
-echo "current ios minor version: $currentIOSMinorVersion"
-echo "current ios patch version: $currentIOSPatchVersion"
-echo "current ios pbxproj patch version: $currentPbxProjPatchVersion"
-echo "current ios version: $currentIOSFullVersion"
+# echo "current ios major version: $currentIOSMajorVersion"
+# echo "current ios minor version: $currentIOSMinorVersion"
+# echo "current ios patch version: $currentIOSPatchVersion"
+# echo "current ios version: $currentIOSFullVersion"
 echo "current android version: $currentAndroidVersion"
 echo "current android version code: $currentVersionCode"
 
@@ -87,12 +86,23 @@ increaseAndroidVersion() {
 # }
 
 increaseAndroidVersion "4.1.5"
+
+updatedAndroidVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
+updatedAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
+
+# git config --global user.email "github.action@rocketlab.com.au"
+# git config --global user.name "github action"
+# git add android/app/build.gradle
+# git commit -m "Increment android version to version ${updatedAndroidVersion}"
+# git --no-pager log --graph -10 --all --color --date=short --pretty=format:"%Cred%x09%h %Creset%ad%Cblue%d %Creset %s %C(bold)(%an)%Creset"
 # updatedIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
 # updatedIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
-# updatedAndroidVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
+updatedAndroidVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
+updatedAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
 # updatedIOSFullVersion="$updatedIOSVersion.$updatedIOSPatchVersion"
 # echo "updated ios version: $updatedIOSFullVersion"
-# echo "updated android version code: $updatedAndroidVersionCode"
+echo "updated android version code: $updatedAndroidVersionCode"
+echo "updated android version name: $updatedAndroidVersion"
 # getVersion() {
 #     currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
 #     echo "current ios version: $currentIOSFullVersion"
