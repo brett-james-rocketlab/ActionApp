@@ -1,8 +1,8 @@
 # need PlistBuddy installed
 appName=ActionApp
 appTestName="${appName}Tests"
-currentIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}")
-currentIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "${BUILT_PRODUCTS_DIR}/${INFOPLIST_PATH}")
+currentIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
+currentIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
 currentAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
 currentVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
 

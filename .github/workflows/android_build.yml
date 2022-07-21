@@ -8,8 +8,8 @@ on:
 jobs:
   android-build:
     name: Android Build
-    # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
-    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
+    runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
+    # runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
 
     steps:
       - name: Check out Git repository # clone the repo to local ci workspace
@@ -47,7 +47,7 @@ jobs:
       - name: Install dependencies # install project deps with --frozen-lockfile to make sure we will have the same packages version ( very recommended  on running yarn install on ci)
         run: yarn install --frozen-lockfile
 
-      ## configure cash for gradle : will help to reduce build time
+      # configure cash for gradle : will help to reduce build time
       - name: Cache Gradle Wrapper
         uses: actions/cache@v2
         with:
