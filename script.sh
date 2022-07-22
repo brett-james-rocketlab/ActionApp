@@ -1,45 +1,50 @@
 # need PlistBuddy installed
 appName=ActionApp
 appTestName="${appName}Tests"
-# currentIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
-# currentIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
+currentIOSPatchVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
+currentIOSVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
 currentAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
 currentVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
 
-# currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
-# currentIOSMajorVersion=${currentIOSVersion%.*}
-# currentIOSMinorVersion=${currentIOSVersion##*.}
+currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
+currentIOSMajorVersion=${currentIOSVersion%.*}
+currentIOSMinorVersion=${currentIOSVersion##*.}
 
-# echo "current ios major version: $currentIOSMajorVersion"
-# echo "current ios minor version: $currentIOSMinorVersion"
-# echo "current ios patch version: $currentIOSPatchVersion"
-# echo "current ios version: $currentIOSFullVersion"
+echo "current ios major version: $currentIOSMajorVersion"
+echo "current ios minor version: $currentIOSMinorVersion"
+echo "current ios patch version: $currentIOSPatchVersion"
+echo "current ios version: $currentIOSFullVersion"
 echo "current android version: $currentAndroidVersion"
 echo "current android version code: $currentVersionCode"
-
-# plistFiles=$(find ios/ -type f -name info.plist)
-# echo "files $plistFiles"
 
 increaseAndroidVersion() {
     newAndroidVersionCode=$(awk -F. '{ print ($1*10000000)+($2*100000+$3) }' <<< $1)
     # Set versionName and versionCode in app build.gradle for 3 digits
     sed -i -E 's/versionName "([0-9]+.[0-9]+.[0-9]+)"/versionName "'$1'"/' android/app/build.gradle
-    # Works for code with 8 length
+    # Works for code with 8 digits or less
     sed -i -E "s/versionCode [0-9]{0,8}$/versionCode $newAndroidVersionCode/" android/app/build.gradle
     echo "version name: $1"
     echo "version code: $newAndroidVersionCode"
 }
 
-# increaseIOSVersion() {
-#     newAndroidVersionCode=$(awk -F. '{ print ($1*10000000)+($2*100000+$3) }' <<< $1)
-#     # Set patch version in IOS info.plist
-#     /usr/libexec/PlistBuddy -c "Set :CFBundleVersion '${newPatchVersion}'" ios/$appName/info.plist
+increaseIOSVersion() {
+    newVersion=$1
+    semver=( ${newVersion//./ } )
+    updatedShortVersion="${semver[0]}.${semver[1]}"
+    updatedPatchVersion="${semver[2]:-0}"
+    # Set IOS info.plist
+    sed -i '' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>[0-9]<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appName/info.plist
+    sed -i '' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appName/info.plist
+    sed -i '' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>[0-9]<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appTestName/info.plist
+    sed -i '' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appTestName/info.plist
+    
+    # Set initial version in IOS pbxproj
+    sed -i '' -e "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = $updatedPatchVersion;/" ios/${appName}.xcodeproj/project.pbxproj
 
-#     # Set patch version in IOS pbxproj
-#     sed -i '' -e "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = ${newPatchVersion};/" ios/${appName}.xcodeproj/project.pbxproj
-#     echo "version name: $1"
-#     echo "version code: $newAndroidVersionCode"
-# }
+    echo "new version: $1"
+    echo "updated short version: $updatedShortVersion"
+    echo "updated patch version: $updatedPatchVersion"
+}
 
 # setInitialVersion() {
 #     # Set initial version name
@@ -85,22 +90,15 @@ increaseAndroidVersion() {
 #     fi
 # }
 
-increaseAndroidVersion "4.1.5"
+increaseIOSVersion "4.1"
+increaseAndroidVersion "4.1"
 
+updatedIOSPatchVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
+updatedIOSVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
 updatedAndroidVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
 updatedAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
-
-# git config --global user.email "github.action@rocketlab.com.au"
-# git config --global user.name "github action"
-# git add android/app/build.gradle
-# git commit -m "Increment android version to version ${updatedAndroidVersion}"
-# git --no-pager log --graph -10 --all --color --date=short --pretty=format:"%Cred%x09%h %Creset%ad%Cblue%d %Creset %s %C(bold)(%an)%Creset"
-# updatedIOSPatchVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" ios/$appName/info.plist)
-# updatedIOSVersion=$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" ios/$appName/info.plist)
-updatedAndroidVersionCode=$(cat android/app/build.gradle | grep -m1 'versionCode' | tr -s ' ' | cut -d ' ' -f3)
-updatedAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
-# updatedIOSFullVersion="$updatedIOSVersion.$updatedIOSPatchVersion"
-# echo "updated ios version: $updatedIOSFullVersion"
+updatedIOSFullVersion="$updatedIOSVersion.$updatedIOSPatchVersion"
+echo "updated ios version: $updatedIOSFullVersion"
 echo "updated android version code: $updatedAndroidVersionCode"
 echo "updated android version name: $updatedAndroidVersion"
 # getVersion() {
