@@ -62,7 +62,7 @@ jobs:
           project-path: ios/ActionApp.xcodeproj
           p12-base64: ${{ secrets.IOS_P12_BASE64 }}
           mobileprovision-base64: ${{ secrets.IOS_MOBILE_PROVISION_BASE64 }}
-          code-signing-identity: 'Apple Development: Brett James (YC7346GCJM)'
+          code-signing-identity: 'adhoc actionapp'
           team-id: ${{ secrets.IOS_TEAM_ID }}
           export-method: 'ad-hoc'          
           certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
