@@ -8,7 +8,8 @@ on:
 jobs:
   ios-build:
     name: IOS Production Build
-    runs-on: macOS-latest
+    #runs-on: [macOS, self-hosted]
+    runs-on: [self-hosted]
     defaults:
       run:
         working-directory: ios
@@ -52,19 +53,21 @@ jobs:
             ${{ runner.os }}-pods-
 
       - name: Install Pods
-        run: cd ios && pod install --repo-update && cd ..
+        #run: cd ios && pod install --repo-update && cd ..
+        run: pod install --repo-update && cd ..
 
       - name: Build IOS App
         uses: yukiarrr/ios-build-action@v1.4.0
         with:
-          project-path: ios/MyApp.xcodeproj
+          project-path: ios/ActionApp.xcodeproj
           p12-base64: ${{ secrets.IOS_P12_BASE64 }}
           mobileprovision-base64: ${{ secrets.IOS_MOBILE_PROVISION_BASE64 }}
-          code-signing-identity: 'iPhone Distribution'
+          code-signing-identity: 'ActionApp versioning test CI pipelines'
           team-id: ${{ secrets.IOS_TEAM_ID }}
+          export-method: 'ad-hoc'          
           certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
           workspace-path: ios/ActionApp.xcworkspace
-          scheme: MyApp
+          scheme: ActionApp
 
       - name: Upload ipa to Slack
         run: 'echo testing a file > message.txt'
@@ -73,8 +76,8 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: '#automation'
 #           android/app/build/outputs/apk/release/app-release-signed.apk
-          file_path: 'android/app/build/outputs/apk/release/app-release.apk'
-          file_type: 'apk'
+          file_path: 'output.ipa'
+          file_type: 'ipa'
           initial_comment: 'post by slack-upload-file'
 
 #      - name: 'Upload app to TestFlight'
