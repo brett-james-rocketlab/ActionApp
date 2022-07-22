@@ -72,7 +72,7 @@ jobs:
       - name: Run Increment Script
         run: ./script.sh
 
-      - name: Commit report
+      - name: Commit Version Increment
         run: |
           git config --global user.name 'test user'
           git config --global user.email 'test-user@users.noreply.github.com'
