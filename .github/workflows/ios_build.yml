@@ -64,6 +64,7 @@ jobs:
           mobileprovision-base64: ${{ secrets.IOS_MOBILE_PROVISION_BASE64 }}
           code-signing-identity: 'ActionApp versioning test CI pipelines'
           team-id: ${{ secrets.IOS_TEAM_ID }}
+          export-method: 'ad-hoc'          
           certificate-password: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
           workspace-path: ios/ActionApp.xcworkspace
           scheme: ActionApp
@@ -75,8 +76,8 @@ jobs:
           slack_token: ${{ secrets.SLACK_TOKEN }}
           channels: '#automation'
 #           android/app/build/outputs/apk/release/app-release-signed.apk
-          file_path: 'android/app/build/outputs/apk/release/app-release.apk'
-          file_type: 'apk'
+          file_path: 'output.ipa'
+          file_type: 'ipa'
           initial_comment: 'post by slack-upload-file'
 
 #      - name: 'Upload app to TestFlight'
