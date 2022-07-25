@@ -70,7 +70,7 @@ jobs:
         run: chmod +x ./script.sh
 
       - name: Run Increment Script
-        run: ./script.sh
+        run: ./script.sh increase-app-version patch
 
       - name: Commit Version Increment
         run: |
