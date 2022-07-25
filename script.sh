@@ -38,10 +38,10 @@ increase_ios_version() {
     updatedShortVersion="${semver[0]}.${semver[1]}"
     updatedPatchVersion="${semver[2]:-0}"
     # Set IOS info.plist
-    sed -i '.bak' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appName/info.plist
-    sed -i '.bak' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appName/info.plist
-    sed -i '.bak' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appTestName/info.plist
-    sed -i '.bak' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appTestName/info.plist
+    sed -i '.bak' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appName/Info.plist
+    sed -i '.bak' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appName/Info.plist
+    sed -i '.bak' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appTestName/Info.plist
+    sed -i '.bak' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appTestName/Info.plist
     
     # Set initial version in IOS pbxproj
     sed -i '.bak' -E "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = $updatedPatchVersion;/" ios/$appName.xcodeproj/project.pbxproj
@@ -61,8 +61,8 @@ increase_build_selection() {
         # Reset minor and patch to zero when major version updated
         updatedVersion="$newIOSMajorVersion.0.0"
 
-        increaseAndroidVersion $updatedVersion
-        increaseIOSVersion $updatedVersion
+        increase_android_version $updatedVersion
+        increase_ios_version $updatedVersion
 
         echo "New Build Version $updatedVersion"
     elif [ $1 = 'minor' ]; then
@@ -71,16 +71,16 @@ increase_build_selection() {
         # Reset patch to zero when minor version updated
         updatedVersion="$currentIOSMajorVersion.$newIOSMinorVersion.0"
 
-        increaseAndroidVersion $updatedVersion
-        increaseIOSVersion $updatedVersion
+        increase_android_version $updatedVersion
+        increase_ios_version $updatedVersion
 
         echo "New Build Version $updatedVersion"
     elif [ $1 = 'patch' ]; then
         newPatchVersion=$(($currentIOSPatchVersion + 1))
         updatedVersion="$currentIOSVersion.$newPatchVersion"
 
-        increaseAndroidVersion $updatedVersion
-        increaseIOSVersion $updatedVersion
+        increase_android_version $updatedVersion
+        increase_ios_version $updatedVersion
 
         echo "New Build Version $updatedVersion"
     else
@@ -100,10 +100,10 @@ increase_app_version() {
     if [ $currentAndroidVersion = $currentIOSFullVersion ]; then
         echo "version length: ${#currentAndroidVersion}"
         if [ ${#currentAndroidVersion} -lt 5 ]; then
-            increaseAndroidVersion "1.0.0"
-            increaseIOSVersion "1.0.0"
+            increase_android_version "1.0.0"
+            increase_ios_version "1.0.0"
         else
-            increaseBuildSelection $1
+            increase_build_selection $1
         fi
     else
         echo "Please fix mismatched IOS ${currentIOSFullVersion} and Android ${currentAndroidVersion} version"
