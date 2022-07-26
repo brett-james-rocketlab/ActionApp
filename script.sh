@@ -10,8 +10,8 @@ get_android_version() {
 }
 
 get_ios_version() {
-    currentIOSPatchVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
-    currentIOSVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
+    currentIOSPatchVersion=$(cat ios/ActionApp/Info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
+    currentIOSVersion=$(cat ios/ActionApp/Info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
 
     currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
     currentIOSMajorVersion=${currentIOSVersion%.*}
@@ -23,9 +23,9 @@ get_ios_version() {
 increase_android_version() {
     newAndroidVersionCode=$(awk -F. '{ print ($1*10000000)+($2*100000+$3) }' <<< $1)
     # Set versionName and versionCode in app build.gradle for 3 digits
-    sed -i '.bak' -E 's/versionName "([0-9]+.[0-9]+.[0-9]+)"/versionName "'$1'"/' android/app/build.gradle
+    sed -i.bak -E 's/versionName "([0-9]+.[0-9]+.[0-9]+)"/versionName "'$1'"/' android/app/build.gradle
     # Works for code with 8 digits or less
-    sed -i '.bak' -E "s/versionCode [0-9]{0,8}$/versionCode $newAndroidVersionCode/" android/app/build.gradle
+    sed -i.bak -E "s/versionCode [0-9]{0,8}$/versionCode $newAndroidVersionCode/" android/app/build.gradle
 
     rm android/app/build.gradle.bak
     echo "Updated Android Version Name: $1"
@@ -38,21 +38,21 @@ increase_ios_version() {
     updatedShortVersion="${semver[0]}.${semver[1]}"
     updatedPatchVersion="${semver[2]:-0}"
     # Set IOS info.plist
-    sed -i '.bak' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appName/Info.plist
-    sed -i '.bak' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appName/Info.plist
-    sed -i '.bak' -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appTestName/Info.plist
-    sed -i '.bak' -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appTestName/Info.plist
+    sed -i.bak -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appName/Info.plist
+    sed -i.bak -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appName/Info.plist
+    sed -i.bak -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appTestName/Info.plist
+    sed -i.bak -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appTestName/Info.plist
     
     # Set initial version in IOS pbxproj
-    sed -i '.bak' -E "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = $updatedPatchVersion;/" ios/$appName.xcodeproj/project.pbxproj
+    sed -i.bak -E "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = $updatedPatchVersion;/" ios/$appName.xcodeproj/project.pbxproj
 
-    rm ios/$appName/info.plist.bak ios/$appTestName/info.plist.bak ios/$appName.xcodeproj/project.pbxproj.bak
+    rm ios/$appName/Info.plist.bak ios/$appTestName/Info.plist.bak ios/$appName.xcodeproj/project.pbxproj.bak
     echo "Updated IOS Version: $1"
 }
 
 increase_build_selection() {
-    currentIOSPatchVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
-    currentIOSVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
+    currentIOSPatchVersion=$(cat ios/ActionApp/Info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
+    currentIOSVersion=$(cat ios/ActionApp/Info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
     currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
     currentIOSMajorVersion=${currentIOSVersion%.*}
 
@@ -89,8 +89,8 @@ increase_build_selection() {
 }
 
 increase_app_version() {
-    currentIOSPatchVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
-    currentIOSVersion=$(cat ios/ActionApp/info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
+    currentIOSPatchVersion=$(cat ios/ActionApp/Info.plist | awk '/CFBundleVersion/{getline; print}' | awk -F "[<>]" '{print $3}')
+    currentIOSVersion=$(cat ios/ActionApp/Info.plist | awk '/CFBundleShortVersionString/{getline; print}' | awk -F "[<>]" '{print $3}')
     currentAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
     currentIOSFullVersion="$currentIOSVersion.$currentIOSPatchVersion"
 
