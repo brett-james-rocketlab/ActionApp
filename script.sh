@@ -1,3 +1,5 @@
+#!/bin/bash
+
 appName=ActionApp
 appTestName="${appName}Tests"
 
@@ -110,6 +112,33 @@ increase_app_version() {
     fi
 }
 
+help()
+{
+   # Display Help
+   echo "Available commands"
+   echo
+   echo "Syntax: ./script.sh [command]"
+   echo
+   echo "Commands:"
+   echo "get-android-version -> Get the current Android version number" 
+   echo "(eg: ./script.sh get-android-version)"
+   echo 
+   echo "get-ios-version -> Get the current IOS version number" 
+   echo "(eg: ./script.sh get-ios-version)"
+   echo
+   echo "set-android-version [version] -> Set the Android version to passed version number" 
+   echo "(eg: ./script.sh set-android-version 1.0.1)"
+   echo 
+   echo "set-ios-version [version]-> Set the IOS version to passed version number" 
+   echo "(eg: ./script.sh set-ios-version 1.0.1)"
+   echo 
+   echo "increase-app-version [major|minor|patch] -> Increase both the IOS and Android version depends on the increment type" 
+   echo "(eg: ./script.sh increase-app-version patch)"
+   echo
+   echo "h -> Show help"
+}
+
+if [ "$1" = "-h" ]; then help; exit; fi
 if [ "$1" = "set-android-version" ]; then increase_android_version $2; exit; fi
 if [ "$1" = "set-ios-version" ]; then increase_ios_version $2; exit; fi
 if [ "$1" = "increase-app-version" ]; then increase_app_version $2; exit; fi
