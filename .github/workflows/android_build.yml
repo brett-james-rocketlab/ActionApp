@@ -74,7 +74,7 @@ jobs:
     # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
-    if: "!contains(github.event.head_commit.message, '[major update]')"
+    if: "contains(github.event.head_commit.message, '[major update]')"
 
     steps:
       - name: Check out Git repository # clone the repo to local ci workspace
@@ -91,7 +91,7 @@ jobs:
     # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
-    if: "!contains(github.event.head_commit.message, '[minor update]')"
+    if: "contains(github.event.head_commit.message, '[minor update]')"
 
     steps:
       - name: Check out Git repository # clone the repo to local ci workspace
@@ -108,7 +108,7 @@ jobs:
     # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
-    if: "!contains(github.event.head_commit.message, '[patch update]')"
+    if: "contains(github.event.head_commit.message, '[patch update]')"
 
     steps:
       - name: Check out Git repository # clone the repo to local ci workspace
