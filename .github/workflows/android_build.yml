@@ -69,8 +69,37 @@ jobs:
       - name: Make Custom Script Executable
         run: chmod +x ./script.sh
 
-      - name: Run Increment Script
+  increment-major:
+    name: Increment Version
+    # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
+    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
+    needs: android-build
+
+      - name: Run Major Update
+        run: ./script.sh increase-app-version major
+
+  increment-minor:
+    name: Increment Version
+    # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
+    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
+    needs: android-build
+
+      - name: Run Minor Update
+        run: ./script.sh increase-app-version minor
+
+  increment-patch:
+    name: Increment Version
+    # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
+    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
+    needs: android-build
+
+      - name: Run Patch Update
         run: ./script.sh increase-app-version patch
+
+  commit-and-build:
+    name: Commit & Build
+    # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
+    runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
 
       - name: Commit Version Increment
         run: |
