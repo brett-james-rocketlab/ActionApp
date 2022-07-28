@@ -75,6 +75,7 @@ jobs:
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
 
+    steps:
       - name: Run Major Update
         run: ./script.sh increase-app-version major
 
@@ -84,6 +85,7 @@ jobs:
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
 
+    steps:
       - name: Run Minor Update
         run: ./script.sh increase-app-version minor
 
@@ -93,6 +95,7 @@ jobs:
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
 
+    steps:
       - name: Run Patch Update
         run: ./script.sh increase-app-version patch
 
@@ -101,6 +104,7 @@ jobs:
     # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
 
+    steps:
       - name: Commit Version Increment
         run: |
           git config --global user.name 'test user'
