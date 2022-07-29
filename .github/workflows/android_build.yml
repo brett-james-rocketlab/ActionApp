@@ -16,6 +16,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: test contains
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
 
       # - name: set up JDK 11
       #   uses: actions/setup-java@v3
@@ -74,7 +79,7 @@ jobs:
     # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
-    if: "contains(github.event.head_commit.message, '[major update]')"
+    if: "contains(github.event.head_commit.message, ' major')"
 
     steps:
       - name: Check out Git repository # clone the repo to local ci workspace
@@ -108,7 +113,7 @@ jobs:
     # runs-on: [self-hosted, macOS] # using ubuntu latest version / or you can use a specific version
     runs-on: ubuntu-latest # using ubuntu latest version / or you can use a specific version
     needs: android-build
-    if: "!contains(github.event.head_commit.message, 'patch')"
+    if: "contains(github.event.head_commit.message, 'patch')"
 
     steps:
       - name: Check out Git repository # clone the repo to local ci workspace
