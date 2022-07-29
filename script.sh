@@ -1,7 +1,10 @@
 #!/bin/bash
 
-appName=ActionApp
-appTestName="${appName}Tests"
+set -and
+
+source .env
+
+set +a
 
 get_android_version() {
     currentAndroidVersion=$(cat android/app/build.gradle | grep -m1 'versionName' | cut -d '"' -f2)
@@ -40,15 +43,15 @@ increase_ios_version() {
     updatedShortVersion="${semver[0]}.${semver[1]}"
     updatedPatchVersion="${semver[2]:-0}"
     # Set IOS info.plist
-    sed -i.bak -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appName/Info.plist
-    sed -i.bak -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appName/Info.plist
-    sed -i.bak -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$appTestName/Info.plist
-    sed -i.bak -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$appTestName/Info.plist
+    sed -i.bak -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$APP_NAME/Info.plist
+    sed -i.bak -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$APP_NAME/Info.plist
+    sed -i.bak -E "/<key>CFBundleVersion<\/key>/{n;s/<string>([0-9]+)*<\/string>/<string>$updatedPatchVersion<\/string>/;}" ios/$APP_TEST_NAME/Info.plist
+    sed -i.bak -E "/<key>CFBundleShortVersionString<\/key>/{n;s/<string>[0-9]+(\.[0-9]+)*<\/string>/<string>$updatedShortVersion<\/string>/;}" ios/$APP_TEST_NAME/Info.plist
     
     # Set initial version in IOS pbxproj
-    sed -i.bak -E "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = $updatedPatchVersion;/" ios/$appName.xcodeproj/project.pbxproj
+    sed -i.bak -E "s/CURRENT_PROJECT_VERSION \= [^\;]*\;/CURRENT_PROJECT_VERSION = $updatedPatchVersion;/" ios/$APP_NAME.xcodeproj/project.pbxproj
 
-    rm ios/$appName/Info.plist.bak ios/$appTestName/Info.plist.bak ios/$appName.xcodeproj/project.pbxproj.bak
+    rm ios/$APP_NAME/Info.plist.bak ios/$APP_TEST_NAME/Info.plist.bak ios/$APP_NAME.xcodeproj/project.pbxproj.bak
     echo "Updated IOS Version: $1"
 }
 
