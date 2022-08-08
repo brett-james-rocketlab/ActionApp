@@ -1,10 +1,10 @@
 {
-  "name": "actionapp",
+  "name": "actionappfl",
   "version": "0.0.2",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brett-james-rocketlab/ActionApp.git"
+    "url": "git+https://github.com/TheRocketLab/ActionAppFL.git"
   },
   "scripts": {
     "android": "react-native run-android",
